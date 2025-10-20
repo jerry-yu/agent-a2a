@@ -18,11 +18,18 @@ async function testAgents() {
       },
       configuration: {
         blocking: true
-      }
+      },
+      skill: 'weather'  // 指定使用weather技能
     });
 
     if (bjMessageResponse.result?.parts?.[0]?.kind === 'text') {
-      console.log('Beijing weather:', bjMessageResponse.result.parts[0].text);
+      // 解析天气数据
+      try {
+        const weatherData = JSON.parse(bjMessageResponse.result.parts[0].text);
+        console.log('Beijing weather:', weatherData);
+      } catch (parseError) {
+        console.log('Beijing weather:', bjMessageResponse.result.parts[0].text);
+      }
     } else {
       console.log('Beijing weather: Failed to get weather information');
     }
@@ -39,11 +46,18 @@ async function testAgents() {
       },
       configuration: {
         blocking: true
-      }
+      },
+      skill: 'weather'  // 指定使用weather技能
     });
 
     if (nyMessageResponse.result?.parts?.[0]?.kind === 'text') {
-      console.log('New York weather:', nyMessageResponse.result.parts[0].text);
+      // 解析天气数据
+      try {
+        const weatherData = JSON.parse(nyMessageResponse.result.parts[0].text);
+        console.log('New York weather:', weatherData);
+      } catch (parseError) {
+        console.log('New York weather:', nyMessageResponse.result.parts[0].text);
+      }
     } else {
       console.log('New York weather: Failed to get weather information');
     }

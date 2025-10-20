@@ -31,6 +31,22 @@ const newyorkAgentCard = {
 // 2. 实现agent的逻辑
 class NewYorkWeatherExecutor {
   async execute(requestContext, eventBus) {
+    // 检查是否有指定skill
+    const skill = requestContext.userMessage?.skill;
+    
+    console.log('New York Agent - Received request with skill:', skill);
+    
+    // 如果指定了weather skill，则调用天气查询处理方法
+    if (skill === 'weather') {
+      return await this.handleWeatherQuery(requestContext, eventBus);
+    }
+    
+    // 检查消息内容中是否包含天气查询关键词
+    const messageText = requestContext.userMessage?.parts?.[0]?.text?.toLowerCase() || '';
+    if (messageText.includes('weather') || messageText.includes('天气')) {
+      return await this.handleWeatherQuery(requestContext, eventBus);
+    }
+    
     // 创建直接消息响应
     const responseMessage = {
       kind: "message",
@@ -88,7 +104,10 @@ class NewYorkWeatherExecutor {
   }
   
   // cancelTask对于这个简单的无状态agent不是必需的
-  cancelTask = async () => {};
+  cancelTask = async (taskId, eventBus) => {
+    // 简单实现，直接标记完成
+    eventBus.finished();
+  };
 }
 
 // 3. 设置和运行服务器
